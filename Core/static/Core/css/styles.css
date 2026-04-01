@@ -1,0 +1,64 @@
+.hero-section {
+    min-height: 50vh;
+    background: linear-gradient(135deg, #2563eb 0%, #1e3a8a 100%);
+}
+
+.auth-hero-section {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #2563eb 0%, #1e3a8a 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.features {
+    background-color: #f8f9fa;
+    margin-top: 0;
+    padding-top: 1rem;
+    padding-bottom: 2rem;
+}
+
+.card {
+    transition: all 0.3s ease;
+    border: none;
+    border-radius: 1rem;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.08);
+}
+
+.form-card {
+    max-width: 400px;
+    width: 100%;
+    padding: 2.5rem 2rem;
+    min-height: 550px;
+    display: flex;
+    flex-direction: column;
+    margin: 0 auto;
+}
+
+.form-card-wide {
+    max-width: 700px;
+    width: 100%;
+    padding: 2.5rem 2rem;
+    display: flex;
+    flex-direction: column;
+    margin: 0 auto;
+}
+
+.btn-narrow {
+    width: auto;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 2rem;
+    padding-right: 2rem;
+}
+
+.form-group {
+    margin-bottom: 2rem;
+}
+
+.form-group .form-label {
+    text-align: left;
+    display: block;
+    margin-bottom: 0.5rem;
+}

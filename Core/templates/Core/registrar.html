@@ -1,0 +1,115 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro - Gerência de Projetos</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'Core/css/styles.css' %}">
+</head>
+<body>
+    <section class="auth-hero-section">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-8">
+                    <div class="card bg-dark text-white form-card-wide">
+                        <h2 class="mb-4 text-center">Cadastro</h2>
+                        <form method="post">
+                            {% csrf_token %}
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="nome" class="form-label">Nome</label>
+                                        <input type="text" class="form-control" id="nome" name="nome" value="{{ form.nome.value|default:'' }}" autocomplete="off" required>
+                                        {% if form.nome.errors %}
+                                            <div class="text-danger small">{{ form.nome.errors.0 }}</div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="sobrenome" class="form-label">Sobrenome</label>
+                                        <input type="text" class="form-control" id="sobrenome" name="sobrenome" value="{{ form.sobrenome.value|default:'' }}" autocomplete="off" required>
+                                        {% if form.sobrenome.errors %}
+                                            <div class="text-danger small">{{ form.sobrenome.errors.0 }}</div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="matricula" class="form-label">Matrícula</label>
+                                        <input type="text" class="form-control" id="matricula" name="matricula" value="{{ form.matricula.value|default:'' }}" pattern="\d{7}" maxlength="7" title="Digite exatamente 7 números" autocomplete="off" required>
+                                        {% if form.matricula.errors %}
+                                            <div class="text-danger small">{{ form.matricula.errors.0 }}</div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="email" class="form-label">E-mail</label>
+                                        <input type="email" class="form-control" id="email" name="email" value="{{ form.email.value|default:'' }}" autocomplete="off" required>
+                                        {% if form.email.errors %}
+                                            <div class="text-danger small">{{ form.email.errors.0 }}</div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mb-0">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="password1" class="form-label">Senha</label>
+                                        <input type="password" class="form-control" id="password1" name="password1" autocomplete="new-password" required>
+                                        {% if form.password1.errors %}
+                                            {% for error in form.password1.errors %}
+                                                {% if "muito curta" not in error and "curta" not in error %}
+                                                    <div class="text-danger small">{{ error }}</div>
+                                                {% endif %}
+                                            {% endfor %}
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="password2" class="form-label">Confirmar senha</label>
+                                        <input type="password" class="form-control" id="password2" name="password2" autocomplete="new-password" required>
+                                        {% if form.password2.errors %}
+                                            {% for error in form.password2.errors %}
+                                                {% if "muito curta" not in error and "curta" not in error %}
+                                                    <div class="text-danger small">{{ error }}</div>
+                                                {% endif %}
+                                            {% endfor %}
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mt-1 mb-4">
+                                <div class="col-12">
+                                    <div class="form-text text-light small">
+                                        A senha deve ter no mínimo 8 caracteres, não pode ser inteiramente numérica e não pode ser muito comum ou semelhante às suas informações pessoais.
+                                    </div>
+                                </div>
+                            </div>
+                            {% if form.non_field_errors %}
+                                <div class="alert alert-danger">
+                                    {% for error in form.non_field_errors %}
+                                        {{ error }}<br>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                            <div class="text-center mt-2">
+                                <button type="submit" class="btn btn-primary btn-narrow">Cadastrar</button>
+                                <div class="mt-3">
+                                    <span>Já tem conta? <a href="{% url 'Core:login' %}" class="text-white">Faça login</a></span>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</body>
+</html>
