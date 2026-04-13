@@ -1,0 +1,147 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ projeto.nome }} - Gerência de Projetos</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'Core/css/styles.css' %}">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'Core:home' %}">Gerência de Projetos</a>
+            <div class="ms-auto">
+                <span class="text-white me-3">{{ user.perfil.nome }}</span>
+                <a href="{% url 'Core:logout' %}" class="btn btn-outline-light btn-sm">Sair</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <nav aria-label="breadcrumb" class="mb-3">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'Core:home' %}">Início</a></li>
+                <li class="breadcrumb-item active">{{ projeto.nome }}</li>
+            </ol>
+        </nav>
+
+        <div class="d-flex align-items-start justify-content-between flex-wrap gap-2 mb-2">
+            <div>
+                <h2 class="mb-1">{{ projeto.nome }}</h2>
+                <p class="text-muted mb-0">{{ projeto.descricao }}</p>
+            </div>
+            {% if lider %}
+            <div class="d-flex gap-2">
+                <a href="{% url 'Core:projeto_editar' projeto.pk %}" class="btn btn-outline-secondary btn-sm">Editar</a>
+                <a href="{% url 'Core:projeto_deletar' projeto.pk %}" class="btn btn-outline-danger btn-sm">Excluir</a>
+            </div>
+            {% endif %}
+        </div>
+        <hr>
+
+        <div class="row g-4">
+            <!-- Coluna principal: Tarefas -->
+            <div class="col-lg-8">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="mb-0">Tarefas</h5>
+                    {% if lider %}
+                    <a href="{% url 'Core:tarefa_criar' projeto.pk %}" class="btn btn-primary btn-sm">+ Nova tarefa</a>
+                    {% endif %}
+                </div>
+
+                {% if tarefas %}
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Título</th>
+                                <th>Responsável</th>
+                                <th>Status</th>
+                                <th>Prazo</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for tarefa in tarefas %}
+                            <tr>
+                                <td>{{ tarefa.titulo }}</td>
+                                <td>
+                                    {% if tarefa.responsavel %}
+                                        {{ tarefa.responsavel.perfil.nome }}
+                                    {% else %}
+                                        <span class="text-muted">—</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if tarefa.status == 'C' %}
+                                        <span class="badge bg-success">{{ tarefa.get_status_display }}</span>
+                                    {% elif tarefa.status == 'E' %}
+                                        <span class="badge bg-warning text-dark">{{ tarefa.get_status_display }}</span>
+                                    {% else %}
+                                        <span class="badge bg-secondary">{{ tarefa.get_status_display }}</span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ tarefa.prazo|default:"—" }}</td>
+                                <td class="text-end">
+                                    <a href="{% url 'Core:tarefa_detalhe' tarefa.pk %}" class="btn btn-outline-primary btn-sm">Ver</a>
+                                    {% if lider %}
+                                    <a href="{% url 'Core:tarefa_editar' tarefa.pk %}" class="btn btn-outline-secondary btn-sm">Editar</a>
+                                    <a href="{% url 'Core:tarefa_deletar' tarefa.pk %}" class="btn btn-outline-danger btn-sm">Excluir</a>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <p class="text-muted">Nenhuma tarefa cadastrada ainda.</p>
+                {% endif %}
+            </div>
+
+            <!-- Coluna lateral: Equipe -->
+            <div class="col-lg-4">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h6 class="card-title mb-0">Equipe</h6>
+                            {% if lider %}
+                            <a href="{% url 'Core:convite_enviar' projeto.pk %}" class="btn btn-outline-primary btn-sm">+ Convidar</a>
+                            {% endif %}
+                        </div>
+
+                        <ul class="list-group list-group-flush">
+                            {% for m in membros %}
+                            <li class="list-group-item px-0 d-flex justify-content-between align-items-center">
+                                <div>
+                                    <span class="fw-semibold">{{ m.usuario.perfil.nome }} {{ m.usuario.perfil.sobrenome }}</span>
+                                    <br>
+                                    <small class="text-muted">{{ m.usuario.perfil.matricula }} · {{ m.get_papel_display }}</small>
+                                </div>
+                                {% if lider and m.papel != 'L' %}
+                                <a href="{% url 'Core:membro_remover' projeto.pk m.usuario.pk %}" class="btn btn-outline-danger btn-sm">Remover</a>
+                                {% endif %}
+                            </li>
+                            {% endfor %}
+                        </ul>
+
+                        {% if lider and convites_pendentes %}
+                        <hr>
+                        <p class="small text-muted mb-1 fw-semibold">Convites pendentes:</p>
+                        <ul class="list-unstyled mb-0">
+                            {% for c in convites_pendentes %}
+                            <li class="small text-muted">⏳ {{ c.convidado.perfil.nome }} {{ c.convidado.perfil.sobrenome }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
