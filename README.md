@@ -112,6 +112,7 @@ Acesse `http://127.0.0.1:8000`.
 - SQLite (desenvolvimento)
 - Claude (auxílio no backend)
 - DeepSeek (auxílio no front-end)
+- Copilot (auxílio nos comentários e mensagens de commit)
 
 **Publicado em:** https://rafd.pythonanywhere.com 
 **Repositório:** https://github.com/rafael-g-v/INF1407_PrimeiroTrabalho
